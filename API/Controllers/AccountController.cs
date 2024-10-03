@@ -65,12 +65,6 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-
-
-               
-              
-
-
                 var user = await _userManager.FindByNameAsync(model.Username);
                 // Get the roles for the user
                 var roles = await _userManager.GetRolesAsync(user);
@@ -109,8 +103,8 @@ namespace API.Controllers
         }
 
         [HttpPost("create-role")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //[Authorize(Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto model)
         {
             if (!await _roleManager.RoleExistsAsync(model.RoleName))

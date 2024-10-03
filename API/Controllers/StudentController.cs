@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.DTOs.Student;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace YourNamespace.Controllers
 {
@@ -35,7 +36,7 @@ namespace YourNamespace.Controllers
             }
             return Ok(student);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<StudentDto>> CreateStudent(CreateStudentDto createStudentDto)
         {

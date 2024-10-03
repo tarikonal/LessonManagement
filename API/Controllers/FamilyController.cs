@@ -39,9 +39,9 @@ namespace API.Controllers
             return Ok(family);
         }
        
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<FamilyDto>> CreateFamily(CreateFamilyDto createFamilyDto)
         {
             // Access user claims

@@ -3,6 +3,7 @@ using Infrastructure.Services;
 using Domain.DTOs.Teacher;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -34,7 +35,7 @@ namespace API.Controllers
             }
             return Ok(teacher);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<TeacherDto>> CreateTeacher(CreateTeacherDto createTeacherDto)
         {

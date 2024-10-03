@@ -3,6 +3,7 @@ using Domain.Entities;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Domain.DTOs.Lesson;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -26,7 +27,7 @@ namespace API.Controllers
             var lessonDtos = _mapper.Map<IEnumerable<LessonDto>>(lessons);
             return Ok(lessonDtos);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<LessonDto>> CreateLesson(CreateLessonDto createLessonDto)
         {
