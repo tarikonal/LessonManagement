@@ -7,7 +7,7 @@ namespace Infrastructure.Services
 {
     public interface ILessonService
     {
-        Task<IEnumerable<LessonDto>> GetLessonsAsync();
+        Task<IEnumerable<LessonDto>> GetLessonsAsync(Guid userId);
         Task<LessonDto> CreateLessonAsync(CreateLessonDto createLessonDto);
         Task<LessonDto> GetLessonByIdAsync(Guid id);
         Task<int> DeleteLessonAsync(Guid id);

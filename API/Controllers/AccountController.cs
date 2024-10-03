@@ -108,7 +108,7 @@ namespace API.Controllers
 
         [HttpPost("create-role")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto model)
         {
             if (!await _roleManager.RoleExistsAsync(model.RoleName))

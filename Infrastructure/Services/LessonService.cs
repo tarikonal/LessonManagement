@@ -20,9 +20,9 @@ namespace Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<LessonDto>> GetLessonsAsync()
+        public async Task<IEnumerable<LessonDto>> GetLessonsAsync(Guid userId)
         {
-            var lessons = await _context.Lessons.ToListAsync();
+            var lessons = await _context.Lessons.Where(x => x.EkleyenKullaniciId == userId).ToListAsync();
             return _mapper.Map<IEnumerable<LessonDto>>(lessons);
         }
 

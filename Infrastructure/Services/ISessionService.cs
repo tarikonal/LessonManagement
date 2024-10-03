@@ -7,7 +7,7 @@ namespace Infrastructure.Services
 {
     public interface ISessionService
     {
-        Task<IEnumerable<SessionDto>> GetSessionsAsync();
+        Task<IEnumerable<SessionDto>> GetSessionsAsync(Guid userId);
         Task<SessionDto> GetSessionByIdAsync(Guid id);
         Task<SessionDto> CreateSessionAsync(CreateSessionDto createSessionDto);
         Task<SessionDto> UpdateSessionAsync(UpdateSessionDto updateSessionDto);

@@ -7,7 +7,7 @@ namespace Infrastructure.Services
 {
     public interface IFamilyService
     {
-        Task<IEnumerable<FamilyDto>> GetFamiliesAsync();
+        Task<IEnumerable<FamilyDto>> GetFamiliesAsync(Guid userId);
         Task<FamilyDto> GetFamilyByIdAsync(Guid id);
         Task<FamilyDto> CreateFamilyAsync(CreateFamilyDto createFamilyDto);
         Task<FamilyDto> UpdateFamilyAsync(UpdateFamilyDto updateFamilyDto);

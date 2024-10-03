@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.DTOs.Lesson;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -20,9 +21,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<SessionDto>>> GetSessions()
         {
-            var sessions = await _sessionService.GetSessionsAsync();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
+            var sessions = await _sessionService.GetSessionsAsync(guidUser.Value);
             return Ok(sessions);
         }
 

@@ -23,9 +23,13 @@ namespace YourNamespace.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<StudentDto>>> GetStudents()
         {
-            var students = await _studentService.GetStudentsAsync();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
+            var students = await _studentService.GetStudentsAsync(guidUser.Value);
             return Ok(students);
         }
 

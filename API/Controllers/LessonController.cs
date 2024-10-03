@@ -24,9 +24,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<LessonDto>>> GetLessons()
         {
-            var lessons = await _lessonService.GetLessonsAsync();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
+            var lessons = await _lessonService.GetLessonsAsync(guidUser.Value);
             var lessonDtos = _mapper.Map<IEnumerable<LessonDto>>(lessons);
             return Ok(lessonDtos);
         }

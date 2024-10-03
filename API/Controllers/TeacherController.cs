@@ -22,9 +22,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<TeacherDto>>> GetTeachers()
         {
-            var teachers = await _teacherService.GetTeachersAsync();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
+            var teachers = await _teacherService.GetTeachersAsync(guidUser.Value);
             return Ok(teachers);
         }
 

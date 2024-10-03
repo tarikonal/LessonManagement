@@ -7,5 +7,6 @@ namespace Domain.DTOs.Family
         public Guid Id { get; set; }
         public string Name { get; set; }
         public ICollection<StudentDto> Members { get; set; }
+        public Guid? EkleyenKullaniciId { get; set; }
     }
 }

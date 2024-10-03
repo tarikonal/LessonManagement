@@ -21,9 +21,9 @@ namespace Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<FamilyDto>> GetFamiliesAsync()
+        public async Task<IEnumerable<FamilyDto>> GetFamiliesAsync(Guid userId)
         {
-            var families = await _context.Families.ToListAsync();
+            var families = await _context.Families.Where(x=>x.EkleyenKullaniciId==userId).ToListAsync();
             return _mapper.Map<IEnumerable<FamilyDto>>(families);
         }
 

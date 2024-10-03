@@ -22,9 +22,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<FamilyDto>>> GetFamilies()
         {
-            var families = await _familyService.GetFamiliesAsync();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
+            var families = await _familyService.GetFamiliesAsync(guidUser.Value);
             return Ok(families);
         }
 

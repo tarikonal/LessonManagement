@@ -20,9 +20,9 @@ namespace Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<SessionDto>> GetSessionsAsync()
+        public async Task<IEnumerable<SessionDto>> GetSessionsAsync(Guid userId)
         {
-            var sessions = await _context.Sessions.ToListAsync();
+            var sessions = await _context.Sessions.Where(x => x.EkleyenKullaniciId == userId).ToListAsync();
             return _mapper.Map<IEnumerable<SessionDto>>(sessions);
         }
 

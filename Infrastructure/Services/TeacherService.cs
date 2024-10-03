@@ -19,9 +19,9 @@ namespace Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TeacherDto>> GetTeachersAsync()
+        public async Task<IEnumerable<TeacherDto>> GetTeachersAsync(Guid userId)
         {
-            var teachers = await _context.Teachers.ToListAsync();
+            var teachers = await _context.Teachers.Where(x => x.EkleyenKullaniciId == userId).ToListAsync();
             return _mapper.Map<IEnumerable<TeacherDto>>(teachers);
         }
 

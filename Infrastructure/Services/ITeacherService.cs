@@ -6,7 +6,7 @@ namespace Infrastructure.Services
 {
     public interface ITeacherService
     {
-        Task<IEnumerable<TeacherDto>> GetTeachersAsync();
+        Task<IEnumerable<TeacherDto>> GetTeachersAsync(Guid userId);
         Task<TeacherDto> GetTeacherByIdAsync(Guid id);
         Task<TeacherDto> CreateTeacherAsync(CreateTeacherDto createTeacherDto);
         Task<TeacherDto> UpdateTeacherAsync(UpdateTeacherDto updateTeacherDto);
