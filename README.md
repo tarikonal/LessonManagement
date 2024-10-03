@@ -1,0 +1,1 @@
+Özel ders alan öğrencinin verilerini tutan ya da özel ders veren bir öğretmenin soyadı aile bilgilerini girerek öğrencilerini kayıt edebileceği ve verdiği özel ders ücretlerini tutabileceği bir API uygulamasıdır. Aileler de bireylere aldırdıkları derslerin ve ücretlerini takip edebileceği bir yapı sunar.
