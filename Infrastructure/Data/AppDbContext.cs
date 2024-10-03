@@ -1,9 +1,13 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection.Emit;
+
 
 namespace Infrastructure.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -15,6 +19,8 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder); // Ensure this call is present
+
             modelBuilder.Entity<Family>()
                 .HasMany(f => f.Members)
                 .WithOne(p => p.Family)
@@ -36,8 +42,8 @@ namespace Infrastructure.Data
                 .HasForeignKey(s => s.LessonId);
 
             modelBuilder.Entity<Session>()
-            .Property(s => s.HourlyPrice)
-            .HasColumnType("decimal(18,2)");
+                .Property(s => s.HourlyPrice)
+                .HasColumnType("decimal(18,2)");
         }
     }
 }
