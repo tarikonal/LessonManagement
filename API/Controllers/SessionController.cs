@@ -3,6 +3,8 @@ using Infrastructure.Services;
 using Domain.DTOs.Session;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Domain.DTOs.Lesson;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -38,6 +40,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<SessionDto>> CreateSession(CreateSessionDto createSessionDto)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            createSessionDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
             var session = await _sessionService.CreateSessionAsync(createSessionDto);
             return CreatedAtAction(nameof(GetSessionById), new { id = session.Id }, session);
         }
@@ -49,7 +54,9 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
-            
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            updateSessionDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
             var updatedSession = await _sessionService.UpdateSessionAsync(updateSessionDto);
             if (updatedSession == null)
             {

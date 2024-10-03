@@ -9,5 +9,6 @@
         public DateTime Date { get; set; }
         public int DurationInHours { get; set; }
         public decimal HourlyPrice { get; set; }
+        public Guid? GuncelleyenKullaniciId { get; set; }
     }
 }

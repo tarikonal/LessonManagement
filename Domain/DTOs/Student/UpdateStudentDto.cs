@@ -9,4 +9,5 @@ public class UpdateStudentDto
     public string Name { get; set; }
     [Required]
     public Guid FamilyId { get; set; }
+    public Guid? GuncelleyenKullaniciId { get; set; }
 }

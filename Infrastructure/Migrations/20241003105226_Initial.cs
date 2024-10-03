@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Guvenlik : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,57 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Families",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: true),
+                    EklemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EkleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GuncellemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    GuncelleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Families", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Lessons",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: true),
+                    EklemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EkleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GuncellemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    GuncelleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lessons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teachers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: true),
+                    EklemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EkleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GuncellemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    GuncelleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +207,70 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FamilyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: true),
+                    EklemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EkleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GuncellemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    GuncelleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Students_Families_FamilyId",
+                        column: x => x.FamilyId,
+                        principalTable: "Families",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sessions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LessonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DurationInHours = table.Column<int>(type: "int", nullable: false),
+                    HourlyPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AktifMi = table.Column<bool>(type: "bit", nullable: true),
+                    EklemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EkleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GuncellemeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    GuncelleyenKullaniciId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sessions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sessions_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sessions_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sessions_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +309,26 @@ namespace Infrastructure.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessions_LessonId",
+                table: "Sessions",
+                column: "LessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessions_StudentId",
+                table: "Sessions",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessions_TeacherId",
+                table: "Sessions",
+                column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_FamilyId",
+                table: "Students",
+                column: "FamilyId");
         }
 
         /// <inheritdoc />
@@ -215,10 +350,25 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Sessions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Lessons");
+
+            migrationBuilder.DropTable(
+                name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Teachers");
+
+            migrationBuilder.DropTable(
+                name: "Families");
         }
     }
 }

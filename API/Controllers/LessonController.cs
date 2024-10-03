@@ -4,6 +4,9 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Domain.DTOs.Lesson;
 using Microsoft.AspNetCore.Authorization;
+using Domain.DTOs.Family;
+using System.Security.Claims;
+using Domain.DTOs.Session;
 
 namespace API.Controllers
 {
@@ -32,6 +35,8 @@ namespace API.Controllers
         public async Task<ActionResult<LessonDto>> CreateLesson(CreateLessonDto createLessonDto)
         {
             var lesson = _mapper.Map<Lesson>(createLessonDto);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            createLessonDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var lessonDto = await _lessonService.CreateLessonAsync(createLessonDto);
             return CreatedAtAction(nameof(GetLessons), new { id = lessonDto.Id }, lessonDto);
@@ -41,6 +46,9 @@ namespace API.Controllers
 
         public async Task<ActionResult<LessonDto>> UpdateLesson(UpdateLessonDto updateLessonDto)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            updateLessonDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
             var lesson = _mapper.Map<Lesson>(updateLessonDto);
 
             var lessonDto = await _lessonService.UpdateLessonAsync(updateLessonDto);

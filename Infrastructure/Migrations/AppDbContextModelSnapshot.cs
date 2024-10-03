@@ -34,14 +34,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("EklemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EkleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("EkleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("GuncellemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GuncelleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("GuncelleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -64,14 +64,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("EklemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EkleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("EkleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("GuncellemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GuncelleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("GuncelleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -100,14 +100,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("EklemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EkleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("EkleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("GuncellemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GuncelleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("GuncelleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("HourlyPrice")
                         .HasColumnType("decimal(18,2)");
@@ -144,8 +144,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("EklemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EkleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("EkleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FamilyId")
                         .HasColumnType("uniqueidentifier");
@@ -153,8 +153,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("GuncellemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GuncelleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("GuncelleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -179,14 +179,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("EklemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EkleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("EkleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("GuncellemeTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GuncelleyenKullaniciId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("GuncelleyenKullaniciId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()

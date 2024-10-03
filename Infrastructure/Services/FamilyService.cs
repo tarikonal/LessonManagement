@@ -6,6 +6,7 @@ using Domain.DTOs.Family;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Infrastructure.Services
 {
@@ -36,7 +37,7 @@ namespace Infrastructure.Services
         {
             var family = _mapper.Map<Family>(createFamilyDto);
             family.EklemeTarihi = DateTime.Now;
-            family.EkleyenKullaniciId = 1;
+            family.EkleyenKullaniciId = createFamilyDto.EkleyenKullaniciId;
             _context.Families.Add(family);
             await _context.SaveChangesAsync();
             return _mapper.Map<FamilyDto>(family);

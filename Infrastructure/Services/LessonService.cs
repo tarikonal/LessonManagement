@@ -30,7 +30,8 @@ namespace Infrastructure.Services
         {
             var lesson = _mapper.Map<Lesson>(createLessonDto);
             lesson.EklemeTarihi = DateTime.Now;
-            lesson.EkleyenKullaniciId = 1;
+
+            lesson.EkleyenKullaniciId = createLessonDto.EkleyenKullaniciId;
             _context.Lessons.Add(lesson);
             await _context.SaveChangesAsync();
             return _mapper.Map<LessonDto>(lesson);
@@ -58,7 +59,7 @@ namespace Infrastructure.Services
         {
             var lesson = _mapper.Map<Lesson>(updateLessonDto);
             lesson.GuncellemeTarihi = DateTime.Now;
-            lesson.GuncelleyenKullaniciId = 1;
+            lesson.GuncelleyenKullaniciId = updateLessonDto.GuncelleyenKullaniciId;
             _context.Lessons.Update(lesson);
             await _context.SaveChangesAsync();
             return _mapper.Map<LessonDto>(lesson);

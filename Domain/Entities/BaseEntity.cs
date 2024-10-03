@@ -15,8 +15,8 @@ namespace Domain.Entities
 
         public bool? AktifMi { get; set; } = true; // Silinip silinmediği kontrolü
         public DateTime? EklemeTarihi { get; set; } // Kaydın eklenme tarihi.
-        public int? EkleyenKullaniciId { get; set; } // Kaydı ekleyen kişinin ID bilgisi.
+        public Guid? EkleyenKullaniciId { get; set; } // Kaydı ekleyen kişinin ID bilgisi.
         public DateTime? GuncellemeTarihi { get; set; } // Kaydın son güncellenme tarihi
-        public int? GuncelleyenKullaniciId { get; set; } // Kaydı son güncelleyen kişinin ID bilgisi.
+        public Guid? GuncelleyenKullaniciId { get; set; } // Kaydı son güncelleyen kişinin ID bilgisi.
     }
 }

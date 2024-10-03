@@ -36,7 +36,7 @@ namespace Infrastructure.Services
         {
             var session = _mapper.Map<Session>(createSessionDto);
             session.EklemeTarihi = DateTime.Now;
-            session.EkleyenKullaniciId = 1;
+            session.EkleyenKullaniciId = createSessionDto.EkleyenKullaniciId;
             _context.Sessions.Add(session);
             await _context.SaveChangesAsync();
             return _mapper.Map<SessionDto>(session);
@@ -52,7 +52,7 @@ namespace Infrastructure.Services
 
             _mapper.Map(updateSessionDto, session);
             session.GuncellemeTarihi = DateTime.Now;
-            session.GuncelleyenKullaniciId = 1;
+            session.GuncelleyenKullaniciId = updateSessionDto.GuncelleyenKullaniciId;
             _context.Sessions.Update(session);
             await _context.SaveChangesAsync();
             return _mapper.Map<SessionDto>(session);

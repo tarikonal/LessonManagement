@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Domain.DTOs.Student;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
+using Domain.DTOs.Lesson;
+using System.Security.Claims;
+using Domain.DTOs.Session;
 
 namespace YourNamespace.Controllers
 {
@@ -40,6 +43,9 @@ namespace YourNamespace.Controllers
         [HttpPost]
         public async Task<ActionResult<StudentDto>> CreateStudent(CreateStudentDto createStudentDto)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            createStudentDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
             var student = await _studentService.CreateStudentAsync(createStudentDto);
             return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, student);
         }
@@ -51,6 +57,8 @@ namespace YourNamespace.Controllers
             {
                 return BadRequest();
             }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            updateStudentDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var updatedStudent = await _studentService.UpdateStudentAsync(updateStudentDto);
             if (updatedStudent == null)

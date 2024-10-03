@@ -44,15 +44,18 @@ namespace API.Controllers
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<FamilyDto>> CreateFamily(CreateFamilyDto createFamilyDto)
         {
-        //    // Access user claims
-        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        //    var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
-        //    //how to read 
-        //    // Optionally, you can add custom logic based on user claims or roles
-        //    if (userRole != "Admin")
-        //    {
-        //        return Forbid(); // Return 403 Forbidden if the user is not an admin
-        //    }
+            //    // Access user claims
+            //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //    var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            //    //how to read 
+            //    // Optionally, you can add custom logic based on user claims or roles
+            //    if (userRole != "Admin")
+            //    {
+            //        return Forbid(); // Return 403 Forbidden if the user is not an admin
+            //    }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            createFamilyDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
             var family = await _familyService.CreateFamilyAsync(createFamilyDto);
             return CreatedAtAction(nameof(GetFamily), new { id = family.Id }, family);
         }
@@ -64,6 +67,8 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            updateFamilyDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var family = await _familyService.UpdateFamilyAsync(updateFamilyDto);
             if (family == null)

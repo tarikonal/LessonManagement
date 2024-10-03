@@ -35,7 +35,7 @@ namespace Infrastructure.Services
         {
             var teacher = _mapper.Map<Teacher>(createTeacherDto);
             teacher.EklemeTarihi = DateTime.Now;
-            teacher.EkleyenKullaniciId = 1;
+            teacher.EkleyenKullaniciId = createTeacherDto.EkleyenKullaniciId;
             _context.Teachers.Add(teacher);
             await _context.SaveChangesAsync();
             return _mapper.Map<TeacherDto>(teacher);
@@ -45,7 +45,7 @@ namespace Infrastructure.Services
         {
             var teacher = _mapper.Map<Teacher>(updateTeacherDto);
             teacher.GuncellemeTarihi = DateTime.Now;
-            teacher.GuncelleyenKullaniciId = 1;
+            teacher.GuncelleyenKullaniciId = updateTeacherDto.GuncelleyenKullaniciId;
             _context.Teachers.Update(teacher);
             await _context.SaveChangesAsync();
             return _mapper.Map<TeacherDto>(teacher);

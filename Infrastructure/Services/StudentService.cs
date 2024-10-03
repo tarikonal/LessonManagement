@@ -36,7 +36,7 @@ namespace Infrastructure.Services
         {
             var student = _mapper.Map<Student>(createStudentDto);
             student.EklemeTarihi = DateTime.Now;
-            student.EkleyenKullaniciId = 1;
+            student.EkleyenKullaniciId = createStudentDto.EkleyenKullaniciId;
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
             return _mapper.Map<StudentDto>(student);

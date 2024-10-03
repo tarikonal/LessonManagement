@@ -4,6 +4,9 @@ using Domain.DTOs.Teacher;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Domain.DTOs.Lesson;
+using System.Security.Claims;
+using Domain.DTOs.Session;
 
 namespace API.Controllers
 {
@@ -39,6 +42,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<TeacherDto>> CreateTeacher(CreateTeacherDto createTeacherDto)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            createTeacherDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+
             var teacher = await _teacherService.CreateTeacherAsync(createTeacherDto);
             return CreatedAtAction(nameof(GetTeacherById), new { id = teacher.Id }, teacher);
         }
@@ -50,6 +56,8 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            updateTeacherDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var updatedTeacher = await _teacherService.UpdateTeacherAsync(updateTeacherDto);
             if (updatedTeacher == null)

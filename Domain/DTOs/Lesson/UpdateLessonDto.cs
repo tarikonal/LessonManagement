@@ -7,6 +7,7 @@ namespace Domain.DTOs.Lesson
         public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
+        public Guid? GuncelleyenKullaniciId { get; set; }
     }
 }
 
