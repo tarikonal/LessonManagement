@@ -37,7 +37,8 @@ namespace API.Controllers
             _configuration = configuration;
     
         }
-
+      
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
@@ -51,7 +52,10 @@ namespace API.Controllers
                     await _roleManager.CreateAsync(new IdentityRole("User"));
                 }
 
-                await _userManager.AddToRoleAsync(user, "User");
+
+                if (string.IsNullOrEmpty(model.RoleName)) { model.RoleName = "User"; }
+
+                await _userManager.AddToRoleAsync(user, model.RoleName);
                 return Ok(new { Message = "User registered successfully" });
             }
 
