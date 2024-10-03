@@ -74,37 +74,21 @@ namespace API.Controllers
                 var roles = await _userManager.GetRolesAsync(user);
                 var tokenHandler = new JwtSecurityTokenHandler();
 
-                // Read JWT settings from appsettings.json
-                var jwtSettings = _configuration.GetSection("JwtSettings");
-                var key = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, user.UserName),
-                        new Claim(ClaimTypes.NameIdentifier,user.Id),
-                        new Claim(ClaimTypes.Role,roles[0])
-                    }),
-                    Expires = DateTime.UtcNow.AddHours(1),
-                    //Issuer = jwtSettings["ValidIssuer"],
-                    //Audience = jwtSettings["ValidAudience"],
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-          
+                // Convert roles to string array
+                var rolesArray = roles.ToArray();
 
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                var tokenString = tokenHandler.WriteToken(token);
+                var tokenString = GenerateToken(user, rolesArray);
 
-                // Manually add login information to AspNetUserLogins table
-                var loginInfo = new UserLoginInfo("JWT", user.Id, "JWT");
-                await _userManager.AddLoginAsync(user, loginInfo);
-
+                AddUserLoginInfo(user, tokenString);
+        
 
                 return Ok(new { Token = tokenString });
             }
 
             return Unauthorized();
         }
+
+    
 
         [HttpPost("create-role")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -125,6 +109,39 @@ namespace API.Controllers
             }
 
             return BadRequest(new { Message = "Role already exists" });
+        }
+        private string GenerateToken(IdentityUser user, string[] roles)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            // Read JWT settings from appsettings.json
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var key = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
+            var tokenLifeTime = (double)Convert.ChangeType(_configuration["JwtSettings:TokenLifeTime"], typeof(double));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier,user.Id),
+                    new Claim(ClaimTypes.Role,roles[0])
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(tokenLifeTime),
+                Issuer = jwtSettings["ValidIssuer"],
+                Audience = jwtSettings["ValidAudience"],
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
+        }
+        private async Task AddUserLoginInfo(IdentityUser user, string tokenString)
+        {
+            var loginInfo = new UserLoginInfo(DateTime.Now.ToString(), tokenString, user.UserName);
+            await _userManager.AddLoginAsync(user, loginInfo);
         }
     }
 }

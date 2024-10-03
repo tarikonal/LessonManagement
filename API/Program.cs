@@ -124,15 +124,3 @@ app.UseAuthentication(); // Ensure authentication middleware is added
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-
-
-
-
-
-
-
-
-
-
-
-
