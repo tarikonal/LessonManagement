@@ -57,17 +57,37 @@ namespace API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<LessonDto>> UpdateAsync(UpdateLessonDto updateLessonDto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            updateLessonDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
-            
-            var lesson = _mapper.Map<Lesson>(updateLessonDto);
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                updateLessonDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
-            var lessonDto = await _lessonService.UpdateLessonAsync(updateLessonDto);
-            return CreatedAtAction(nameof(GetAllAsync), new { id = lessonDto.Id }, lessonDto);
+                // Retrieve the existing lesson from the database
+                //var existingLesson = await _lessonService.GetLessonByIdAsync(updateLessonDto.Id);
+                //if (existingLesson == null)
+                //{
+                //    return NotFound();
+                //}
+
+                //// Preserve the original values of EkleyenKullaniciId and EklemeTarihi
+                //updateLessonDto.EkleyenKullaniciId = existingLesson.EkleyenKullaniciId;
+                ////updateLessonDto.EklemeTarihi = existingLesson.EklemeTarihi;
+                
+                var lesson = _mapper.Map<Lesson>(updateLessonDto);
+
+                var lessonDto = await _lessonService.UpdateLessonAsync(updateLessonDto);
+                return CreatedAtAction(nameof(GetAllAsync), new { id = lessonDto.Id }, lessonDto);
+            }
+            catch (Exception ex)
+            {
+                // Handle the error here
+                // Log the error or return a specific error response
+                return StatusCode(500, ex.Message);
+            }
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByIdAsync/{id}")]
         public async Task<ActionResult<LessonDto>> GetByIdAsync(Guid id)
         {
             var lesson = await _lessonService.GetLessonByIdAsync(id);

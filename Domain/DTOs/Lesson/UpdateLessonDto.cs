@@ -8,6 +8,8 @@ namespace Domain.DTOs.Lesson
         [Required]
         public string Name { get; set; }
         public Guid? GuncelleyenKullaniciId { get; set; }
+        public Guid? EkleyenKullaniciId { get; set; }
+        public DateTime? EklemeTarihi { get; set; } // Kaydın eklenme tarihi.
     }
 }
 

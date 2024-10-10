@@ -37,7 +37,7 @@ namespace API.Controllers
             return Ok(teachers);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByIdAsync/{id}")]
         public async Task<ActionResult<TeacherDto>> GetByIdAsync(Guid id)
         {
             var teacher = await _teacherService.GetTeacherByIdAsync(id);
@@ -47,8 +47,9 @@ namespace API.Controllers
             }
             return Ok(teacher);
         }
-        [Authorize(Roles = "Admin")]
+
         [HttpPost("AddAsync")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<TeacherDto>> AddAsync(CreateTeacherDto createTeacherDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -58,7 +59,7 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetByIdAsync), new { id = teacher.Id }, teacher);
         }
 
-        [HttpPut("UpdateAsync/{id}")]
+        [HttpPut("UpdateAsync")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<TeacherDto>> UpdateAsync(UpdateTeacherDto updateTeacherDto)
         {

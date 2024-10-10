@@ -17,28 +17,36 @@ namespace YourNamespace.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
+        private readonly IFamilyService _familyService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public StudentController(IStudentService studentService, UserManager<IdentityUser> userManager)
+        public StudentController(IStudentService studentService, UserManager<IdentityUser> userManager, IFamilyService familyService)
         {
             _studentService = studentService;
             _userManager = userManager;
+            _familyService = familyService;
         }
 
         [HttpGet("GetAllAsync")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<StudentDto>>> GetAllAsync()
         {
-            //string userName = "tarikonal";
-            //var user = await _userManager.FindByNameAsync(userName);
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var students = await _studentService.GetStudentsAsync(guidUser.Value);
+
+            // Retrieve the family names for each student
+            foreach (var student in students)
+            {
+                var family = await _familyService.GetFamilyByIdAsync(student.FamilyId);
+                student.FamilyName = family.Name;
+            }
+
             return Ok(students);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByIdAsync/{id}")]
         public async Task<ActionResult<StudentDto>> GetByIdAsync(Guid id)
         {
             var student = await _studentService.GetStudentByIdAsync(id);
@@ -48,9 +56,10 @@ namespace YourNamespace.Controllers
             }
             return Ok(student);
         }
+
+        [HttpPost("AddAsync")]
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<ActionResult<StudentDto>> CreateStudent(CreateStudentDto createStudentDto)
+        public async Task<ActionResult<StudentDto>> AddAsync(CreateStudentDto createStudentDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             createStudentDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;

@@ -84,8 +84,6 @@ namespace API.Controllers
                 var token = tokenHandler.ReadJwtToken(tokenString);
                 var username = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
                 var expirationDate = token.ValidTo;
-               
-
 
 
                 return Ok(new { Token = tokenString, Username = user.UserName, Expiration = expirationDate });
@@ -93,8 +91,6 @@ namespace API.Controllers
 
             return Unauthorized();
         }
-
-    
 
         [HttpPost("create-role")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

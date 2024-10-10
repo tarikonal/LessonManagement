@@ -20,9 +20,15 @@ namespace Infrastructure.Services
             _mapper = mapper;
         }
 
+        // ...
+
         public async Task<IEnumerable<StudentDto>> GetStudentsAsync(Guid userId)
         {
-            var students = await _context.Students.Where(x => x.EkleyenKullaniciId == userId).ToListAsync();
+            var students = await _context.Students
+                .Where(x => x.EkleyenKullaniciId == userId)
+                //.Include(x => x.Family) // Include the Family navigation property
+                .ToListAsync();
+
             return _mapper.Map<IEnumerable<StudentDto>>(students);
         }
 

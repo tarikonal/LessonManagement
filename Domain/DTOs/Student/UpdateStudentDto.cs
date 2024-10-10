@@ -10,4 +10,6 @@ public class UpdateStudentDto
     [Required]
     public Guid FamilyId { get; set; }
     public Guid? GuncelleyenKullaniciId { get; set; }
+    public Guid? EkleyenKullaniciId { get; set; }
+    public DateTime? EklemeTarihi { get; set; }
 }

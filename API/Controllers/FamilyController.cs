@@ -66,11 +66,20 @@ namespace API.Controllers
             //    {
             //        return Forbid(); // Return 403 Forbidden if the user is not an admin
             //    }
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            createFamilyDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                createFamilyDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
-            var family = await _familyService.CreateFamilyAsync(createFamilyDto);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = family.Id }, family);
+                var family = await _familyService.CreateFamilyAsync(createFamilyDto);
+                return CreatedAtAction(nameof(GetByIdAsync), new { id = family.Id }, family);
+            }
+            catch (Exception ex)
+            {
+                // Handle the error here
+                // Log the error or return a specific error response
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("UpdateAsync")]

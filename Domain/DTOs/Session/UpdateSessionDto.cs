@@ -10,5 +10,7 @@
         public int DurationInHours { get; set; }
         public decimal HourlyPrice { get; set; }
         public Guid? GuncelleyenKullaniciId { get; set; }
+        public Guid? EkleyenKullaniciId { get; set; }
+        public DateTime? EklemeTarihi { get; set; }
     }
 }

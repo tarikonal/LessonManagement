@@ -40,7 +40,16 @@ namespace Infrastructure.Services
         public async Task<LessonDto> GetLessonByIdAsync(Guid id)
         {
             var lesson = await _context.Lessons.FindAsync(id);
+            
             return _mapper.Map<LessonDto>(lesson);
+        }
+
+
+        public async Task<Lesson> GetLessonByIdForUpdatesAsync(Guid id)
+        {
+            var lesson = await _context.Lessons.FindAsync(id);
+
+            return (lesson);
         }
 
         public async Task<int> DeleteLessonAsync(Guid id)

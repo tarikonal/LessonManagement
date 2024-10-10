@@ -37,7 +37,7 @@ namespace API.Controllers
             return Ok(sessions);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByIdAsync/{id}")]
         public async Task<ActionResult<SessionDto>> GetByIdAsync(Guid id)
         {
             var session = await _sessionService.GetSessionByIdAsync(id);
@@ -58,7 +58,6 @@ namespace API.Controllers
             var session = await _sessionService.CreateSessionAsync(createSessionDto);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = session.Id }, session);
         }
-
         [HttpPut("UpdateAsync")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<SessionDto>> UpdateAsync(UpdateSessionDto updateSessionDto)
