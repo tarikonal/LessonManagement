@@ -80,9 +80,15 @@ namespace API.Controllers
                 var tokenString = GenerateToken(user, rolesArray);
 
                 AddUserLoginInfo(user, tokenString);
-        
+                // Decode the token to extract username and expiration date
+                var token = tokenHandler.ReadJwtToken(tokenString);
+                var username = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                var expirationDate = token.ValidTo;
+               
 
-                return Ok(new { Token = tokenString });
+
+
+                return Ok(new { Token = tokenString, Username = user.UserName, Expiration = expirationDate });
             }
 
             return Unauthorized();
@@ -127,6 +133,7 @@ namespace API.Controllers
                     new Claim(ClaimTypes.NameIdentifier,user.Id),
                     new Claim(ClaimTypes.Role,roles[0])
                 }),
+                NotBefore = DateTime.UtcNow, 
                 Expires = DateTime.UtcNow.AddMinutes(tokenLifeTime),
                 Issuer = jwtSettings["ValidIssuer"],
                 Audience = jwtSettings["ValidAudience"],

@@ -7,6 +7,8 @@ using Domain.DTOs.Family;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Controllers
 {
@@ -15,16 +17,22 @@ namespace API.Controllers
     public class FamilyController : ControllerBase
     {
         private readonly IFamilyService _familyService;
+      
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public FamilyController(IFamilyService familyService)
+        public FamilyController(IFamilyService familyService, UserManager<IdentityUser> userManager)
         {
             _familyService = familyService;
+            _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllAsync")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<FamilyDto>>> GetFamilies()
+        public async Task<ActionResult<IEnumerable<FamilyDto>>> GetAllAsync()
         {
+            //string userName = "tarikonal";
+            //var user = await _userManager.FindByNameAsync(userName);
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
@@ -32,8 +40,9 @@ namespace API.Controllers
             return Ok(families);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FamilyDto>> GetFamily(Guid id)
+        //[HttpGet("{id}")]
+        [HttpGet("GetByIdAsync/{id}")]
+        public async Task<ActionResult<FamilyDto>> GetByIdAsync(Guid id)
         {
             var family = await _familyService.GetFamilyByIdAsync(id);
             if (family == null)
@@ -44,9 +53,9 @@ namespace API.Controllers
         }
        
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [HttpPost("AddAsync")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<FamilyDto>> CreateFamily(CreateFamilyDto createFamilyDto)
+        public async Task<ActionResult<FamilyDto>> AddAsync(CreateFamilyDto createFamilyDto)
         {
             //    // Access user claims
             //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -61,16 +70,17 @@ namespace API.Controllers
             createFamilyDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var family = await _familyService.CreateFamilyAsync(createFamilyDto);
-            return CreatedAtAction(nameof(GetFamily), new { id = family.Id }, family);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = family.Id }, family);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFamily(Guid id, UpdateFamilyDto updateFamilyDto)
+        [HttpPut("UpdateAsync")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateAsync(UpdateFamilyDto updateFamilyDto)
         {
-            if (id != updateFamilyDto.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != updateFamilyDto.Id)
+            //{
+            //    return BadRequest();
+            //}
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             updateFamilyDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
@@ -83,8 +93,9 @@ namespace API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFamily(Guid id)
+        [HttpDelete("DeleteAsync/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var result = await _familyService.DeleteFamilyAsync(id);
             if (result == 0)

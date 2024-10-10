@@ -60,6 +60,9 @@ namespace Infrastructure.Services
             var lesson = _mapper.Map<Lesson>(updateLessonDto);
             lesson.GuncellemeTarihi = DateTime.Now;
             lesson.GuncelleyenKullaniciId = updateLessonDto.GuncelleyenKullaniciId;
+            //var oldRecord = GetLessonByIdAsync(lesson.Id);
+            //lesson.EkleyenKullaniciId = oldRecord.ekl
+
             _context.Lessons.Update(lesson);
             await _context.SaveChangesAsync();
             return _mapper.Map<LessonDto>(lesson);

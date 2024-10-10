@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Domain.DTOs.Lesson;
 using System.Security.Claims;
 using Domain.DTOs.Session;
+using Microsoft.AspNetCore.Identity;
 
 namespace YourNamespace.Controllers
 {
@@ -16,16 +17,20 @@ namespace YourNamespace.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public StudentController(IStudentService studentService)
+        public StudentController(IStudentService studentService, UserManager<IdentityUser> userManager)
         {
             _studentService = studentService;
+            _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllAsync")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<StudentDto>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<StudentDto>>> GetAllAsync()
         {
+            //string userName = "tarikonal";
+            //var user = await _userManager.FindByNameAsync(userName);
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
@@ -34,7 +39,7 @@ namespace YourNamespace.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<StudentDto>> GetStudentById(Guid id)
+        public async Task<ActionResult<StudentDto>> GetByIdAsync(Guid id)
         {
             var student = await _studentService.GetStudentByIdAsync(id);
             if (student == null)
@@ -51,16 +56,14 @@ namespace YourNamespace.Controllers
             createStudentDto.EkleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var student = await _studentService.CreateStudentAsync(createStudentDto);
-            return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, student);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = student.Id }, student);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<StudentDto>> UpdateStudent(Guid id, UpdateStudentDto updateStudentDto)
+        [HttpPut("UpdateAsync")]
+        [Authorize(Roles = "Admin")]
+
+        public async Task<ActionResult<StudentDto>> UpdateAsync(UpdateStudentDto updateStudentDto)
         {
-            if (id != updateStudentDto.Id)
-            {
-                return BadRequest();
-            }
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             updateStudentDto.GuncelleyenKullaniciId = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
@@ -73,8 +76,9 @@ namespace YourNamespace.Controllers
             return Ok(updatedStudent);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteStudent(Guid id)
+        [HttpDelete("DeleteAsync/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
             var result = await _studentService.DeleteStudentAsync(id);
             if (result == -1)
