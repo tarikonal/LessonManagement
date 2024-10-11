@@ -7,6 +7,7 @@ using Domain.DTOs.Lesson;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Domain.Entities;
 
 namespace API.Controllers
 {
@@ -15,12 +16,23 @@ namespace API.Controllers
     public class SessionController : ControllerBase
     {
         private readonly ISessionService _sessionService;
+        private readonly ITeacherService _teacherService;
+        private readonly IStudentService _studentService;
+        private readonly ILessonService _lessonService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public SessionController(ISessionService sessionService, UserManager<IdentityUser> userManager)
+        public SessionController(ISessionService sessionService, 
+                                 UserManager<IdentityUser> userManager,
+                                  ITeacherService teacherService,
+                                  IStudentService studentService,
+                                  ILessonService lessonService
+                                )
         {
             _sessionService = sessionService;
             _userManager = userManager;
+            _teacherService = teacherService;
+            _studentService = studentService;
+            _lessonService = lessonService;
         }
 
         [HttpGet("GetAllAsync")]
@@ -34,6 +46,25 @@ namespace API.Controllers
             Guid? guidUser = Guid.TryParse(userId, out var guidUserId) ? guidUserId : (Guid?)null;
 
             var sessions = await _sessionService.GetSessionsAsync(guidUser.Value);
+
+            
+            foreach (var session in sessions)
+            {
+                var student = await _studentService.GetStudentByIdAsync(session.StudentId);
+                session.studentName = student.Name;
+            }
+            foreach (var session in sessions)
+            {
+                var teacher = await _teacherService.GetTeacherByIdAsync(session.TeacherId);
+                session.teacherName = teacher.Name;
+            }
+            foreach (var session in sessions)
+            {
+                var lesson = await _lessonService.GetLessonByIdAsync(session.LessonId);
+                session.lessonName = lesson.Name;
+            }
+
+
             return Ok(sessions);
         }
 
