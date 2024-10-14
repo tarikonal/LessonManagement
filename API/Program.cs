@@ -25,6 +25,8 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:4200") // Add the Angular app's URL here
+            .WithOrigins("http://ders.tarikonal.com.tr")
+            .WithOrigins("https://ders.tarikonal.com.tr")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -137,8 +139,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//how to show swagger ui in production
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger API V1"));
 
-app.UseHttpsRedirection();
+app.UseRouting();
+
+
+
+//app.UseHttpsRedirection();
 app.UseAuthentication(); // Ensure authentication middleware is added
 app.UseAuthorization();
 app.MapControllers();
