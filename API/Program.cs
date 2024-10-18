@@ -25,6 +25,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:4200") // Add the Angular app's URL here
+            .WithOrigins("https://localhost:7209")
             .WithOrigins("http://ders.tarikonal.com.tr")
             .WithOrigins("https://ders.tarikonal.com.tr")
                   .AllowAnyHeader()
